@@ -683,6 +683,15 @@ GetMaterialType(const RawModel &raw, const int textures[RAW_TEXTURE_USAGE_MAX], 
                 return skinned ? RAW_MATERIAL_TYPE_SKINNED_TRANSPARENT : RAW_MATERIAL_TYPE_TRANSPARENT;
         }
     }
+	// albedo is used for color textures so we need to check that one too
+	if (textures[RAW_TEXTURE_USAGE_ALBEDO] >= 0) {
+		switch (raw.GetTexture(textures[RAW_TEXTURE_USAGE_ALBEDO]).occlusion) {
+		case RAW_TEXTURE_OCCLUSION_OPAQUE:
+			return skinned ? RAW_MATERIAL_TYPE_SKINNED_OPAQUE : RAW_MATERIAL_TYPE_OPAQUE;
+		case RAW_TEXTURE_OCCLUSION_TRANSPARENT:
+			return skinned ? RAW_MATERIAL_TYPE_SKINNED_TRANSPARENT : RAW_MATERIAL_TYPE_TRANSPARENT;
+		}
+	}
 
 	// else if there is any vertex transparency, treat whole mesh as transparent
 	if (vertexTransparency) {
