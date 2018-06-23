@@ -117,6 +117,8 @@ struct FbxRoughMetMaterialInfo : FbxMaterialInfo {
     FbxVector4           colEmissive {};
     FbxDouble            emissiveIntensity {};
     const FbxFileTexture *texAmbientOcclusion {};
+	const FbxFileTexture *texMask {};
+	FbxDouble			 maskThreshold {};
 
     static std::unique_ptr<FbxRoughMetMaterialInfo> From(
         FbxSurfaceMaterial *fbxMaterial,
@@ -173,6 +175,8 @@ struct FbxRoughMetMaterialInfo : FbxMaterialInfo {
         res->metallic = getVal("metallic");
         res->texRoughness = getTex("roughness");
         res->roughness = getVal("roughness");
+		res->texMask = getTex("mask");
+		res->maskThreshold = getVal("mask_threshold");
 
         return res;
     }
@@ -840,9 +844,10 @@ static void ReadMesh(RawModel &raw, FbxScene *pScene, FbxNode *pNode, const std:
                 maybeAddTexture(fbxMatInfo->texRoughness, RAW_TEXTURE_USAGE_ROUGHNESS);
                 maybeAddTexture(fbxMatInfo->texMetallic, RAW_TEXTURE_USAGE_METALLIC);
                 maybeAddTexture(fbxMatInfo->texAmbientOcclusion, RAW_TEXTURE_USAGE_OCCLUSION);
+				maybeAddTexture(fbxMatInfo->texMask, RAW_TEXTURE_USAGE_MASK);
                 rawMatProps.reset(new RawMetRoughMatProps(
                     RAW_SHADING_MODEL_PBR_MET_ROUGH, toVec4f(fbxMatInfo->colBase), toVec3f(fbxMatInfo->colEmissive),
-                    fbxMatInfo->emissiveIntensity, fbxMatInfo->metallic, fbxMatInfo->roughness));
+                    fbxMatInfo->emissiveIntensity, fbxMatInfo->metallic, fbxMatInfo->roughness, fbxMatInfo->maskThreshold));
             } else {
 
                 FbxTraditionalMaterialInfo *fbxMatInfo = static_cast<FbxTraditionalMaterialInfo *>(fbxMaterial.get());

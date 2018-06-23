@@ -624,7 +624,7 @@ ModelData *Raw2Gltf(
             const bool isTransparent =
                            material.type == RAW_MATERIAL_TYPE_TRANSPARENT ||
                            material.type == RAW_MATERIAL_TYPE_SKINNED_TRANSPARENT;
-
+			float maskThreshold;
             Vec3f emissiveFactor;
             float emissiveIntensity;
 
@@ -704,6 +704,7 @@ ModelData *Raw2Gltf(
                     roughness         = props->roughness;
                     emissiveFactor    = props->emissiveFactor;
                     emissiveIntensity = props->emissiveIntensity;
+					maskThreshold	  = props->maskThreshold;
                     // add the occlusion texture only if actual occlusion pixels exist in the aoNetRough texture.
                     if (material.textures[RAW_TEXTURE_USAGE_OCCLUSION] >= 0) {
                        occlusionTexture  = aoMetRoughTex.get();
@@ -792,7 +793,7 @@ ModelData *Raw2Gltf(
 
             std::shared_ptr<MaterialData> mData = gltf->materials.hold(
                 new MaterialData(
-                    material.name, isTransparent, material.info->shadingModel,
+                    material.name, isTransparent, maskThreshold, material.info->shadingModel,
                     normalTexture, occlusionTexture, emissiveTexture,
                     emissiveFactor * emissiveIntensity, khrCmnUnlitMat, pbrMetRough));
             materialsByName[materialHash(material)] = mData;

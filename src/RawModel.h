@@ -191,6 +191,7 @@ enum RawTextureUsage
     RAW_TEXTURE_USAGE_OCCLUSION,
     RAW_TEXTURE_USAGE_ROUGHNESS,
     RAW_TEXTURE_USAGE_METALLIC,
+	RAW_TEXTURE_USAGE_MASK,
     RAW_TEXTURE_USAGE_MAX
 };
 
@@ -208,6 +209,7 @@ static inline std::string Describe(RawTextureUsage usage)
         case RAW_TEXTURE_USAGE_OCCLUSION:   return "occlusion";
         case RAW_TEXTURE_USAGE_ROUGHNESS:   return "roughness";
         case RAW_TEXTURE_USAGE_METALLIC:    return "metallic";
+		case RAW_TEXTURE_USAGE_MASK:		return "mask";
         case RAW_TEXTURE_USAGE_MAX:default: return "unknown";
     }
 };
@@ -290,19 +292,22 @@ struct RawMetRoughMatProps : RawMatProps {
         const Vec3f &&emissiveFactor,
         float emissiveIntensity,
         float metallic,
-        float roughness
+        float roughness,
+		float maskThreshold
     ) : RawMatProps(shadingModel),
       diffuseFactor(diffuseFactor),
       emissiveFactor(emissiveFactor),
       emissiveIntensity(emissiveIntensity),
       metallic(metallic),
-      roughness(roughness)
+      roughness(roughness),
+	  maskThreshold(maskThreshold)
     {}
     const Vec4f diffuseFactor;
     const Vec3f emissiveFactor;
     const float emissiveIntensity;
     const float metallic;
     const float roughness;
+	const float maskThreshold;
 
     bool operator==(const RawMatProps &other) const override {
         if (RawMatProps::operator==(other)) {
@@ -311,7 +316,8 @@ struct RawMetRoughMatProps : RawMatProps {
             emissiveFactor == typed.emissiveFactor &&
             emissiveIntensity == typed.emissiveIntensity &&
             metallic == typed.metallic &&
-            roughness == typed.roughness;
+            roughness == typed.roughness &&
+			maskThreshold == typed.maskThreshold;
         }
         return false;
     }
