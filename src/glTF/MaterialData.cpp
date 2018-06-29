@@ -79,7 +79,7 @@ void to_json(json &j, const PBRMetallicRoughness &d)
 }
 
 MaterialData::MaterialData(
-    std::string name, bool isTransparent, const float isMask, const RawShadingModel shadingModel, 
+    std::string name, bool isTransparent, const float maskThreshold, const RawShadingModel shadingModel,
     const TextureData *normalTexture, const TextureData *occlusionTexture,
     const TextureData *emissiveTexture, const Vec3f & emissiveFactor,
     std::shared_ptr<KHRCmnUnlitMaterial> const khrCmnConstantMaterial,
