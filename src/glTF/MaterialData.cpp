@@ -92,7 +92,8 @@ MaterialData::MaterialData(
       normalTexture(Tex::ref(normalTexture)),
       occlusionTexture(Tex::ref(occlusionTexture)),
       emissiveTexture(Tex::ref(emissiveTexture)),
-      emissiveFactor(clamp(emissiveFactor)),
+	  // although glTF 2.0 spec limits emissiveFactor to a range of 0-1, this has been requested to allow HDR ranges per this issue: https://github.com/KhronosGroup/glTF/issues/1083
+      emissiveFactor(emissiveFactor), 
       khrCmnConstantMaterial(khrCmnConstantMaterial),
       pbrMetallicRoughness(pbrMetallicRoughness) {}
 
