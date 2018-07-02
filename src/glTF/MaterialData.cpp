@@ -81,7 +81,7 @@ void to_json(json &j, const PBRMetallicRoughness &d)
 MaterialData::MaterialData(
     std::string name, bool isTransparent, const float maskThreshold, const RawShadingModel shadingModel,
     const TextureData *normalTexture, const TextureData *occlusionTexture,
-    const TextureData *emissiveTexture, const Vec3f & emissiveFactor,
+    const TextureData *emissiveTexture, const Vec3f & emissiveFactor, const float emissiveIntensity,
     std::shared_ptr<KHRCmnUnlitMaterial> const khrCmnConstantMaterial,
     std::shared_ptr<PBRMetallicRoughness> const pbrMetallicRoughness)
     : Holdable(),
@@ -92,8 +92,8 @@ MaterialData::MaterialData(
       normalTexture(Tex::ref(normalTexture)),
       occlusionTexture(Tex::ref(occlusionTexture)),
       emissiveTexture(Tex::ref(emissiveTexture)),
-	  // although glTF 2.0 spec limits emissiveFactor to a range of 0-1, this has been requested to allow HDR ranges per this issue: https://github.com/KhronosGroup/glTF/issues/1083
-      emissiveFactor(emissiveFactor), 
+      emissiveFactor(clamp(emissiveFactor)), 
+	  emissiveIntensity(emissiveIntensity),
       khrCmnConstantMaterial(khrCmnConstantMaterial),
       pbrMetallicRoughness(pbrMetallicRoughness) {}
 
@@ -108,7 +108,12 @@ json MaterialData::serialize() const
                 { "shadingModel", Describe(shadingModel) },
                 { "isTruePBR", shadingModel == RAW_SHADING_MODEL_PBR_MET_ROUGH }
             }}
-        }}
+        }},
+		{ "extensions", {
+			{ "stingray_fbx", {
+				{ "emissiveIntensity", emissiveIntensity }
+			}}
+		}}
     };
 
     if (normalTexture != nullptr) {

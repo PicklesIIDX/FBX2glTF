@@ -46,7 +46,7 @@ struct MaterialData : Holdable
     MaterialData(
         std::string name, bool isTransparent, const float maskThreshold, RawShadingModel shadingModel,
         const TextureData *normalTexture, const TextureData *occlusionTexture,
-        const TextureData *emissiveTexture, const Vec3f &emissiveFactor,
+        const TextureData *emissiveTexture, const Vec3f &emissiveFactor, const float emissiveIntensity,
         std::shared_ptr<KHRCmnUnlitMaterial> const khrCmnConstantMaterial,
         std::shared_ptr<PBRMetallicRoughness> const pbrMetallicRoughness);
 
@@ -60,6 +60,7 @@ struct MaterialData : Holdable
     const std::unique_ptr<const Tex> occlusionTexture;
     const std::unique_ptr<const Tex> emissiveTexture;
     const Vec3f                      emissiveFactor;
+	const float						 emissiveIntensity;
 
     const std::shared_ptr<const KHRCmnUnlitMaterial>    khrCmnConstantMaterial;
     const std::shared_ptr<const PBRMetallicRoughness>   pbrMetallicRoughness;

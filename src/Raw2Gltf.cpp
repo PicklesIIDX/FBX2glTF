@@ -795,7 +795,7 @@ ModelData *Raw2Gltf(
                 new MaterialData(
                     material.name, isTransparent, maskThreshold, material.info->shadingModel,
                     normalTexture, occlusionTexture, emissiveTexture,
-                    emissiveFactor * emissiveIntensity, khrCmnUnlitMat, pbrMetRough));
+                    emissiveFactor, emissiveIntensity, khrCmnUnlitMat, pbrMetRough));
             materialsByName[materialHash(material)] = mData;
         }
 
@@ -1087,6 +1087,7 @@ ModelData *Raw2Gltf(
             extensionsUsed.push_back(KHR_DRACO_MESH_COMPRESSION);
             extensionsRequired.push_back(KHR_DRACO_MESH_COMPRESSION);
         }
+		extensionsUsed.push_back("stingray_fbx");
 
         json glTFJson {
           { "asset", {
